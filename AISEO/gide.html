@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISEO Гайды</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f9;
+            color: #333;
+            padding-left: calc(100vw - 100%);
+        }
+
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Header styles */
+        .header-container {
+            width: 100%;
+            max-width: 1600px;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            background-color: #f8f8f9;
+            padding-top: 20px;
+        }
+
+        .main-header {
+            width: 100%;
+            height: 75px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        /* Left header section */
+        .header-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            height: 48px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 33px;
+            background-image: url('union.svg');
+            background-size: 100% 100%;
+        }
+
+        .logo-text {
+            margin-left: 9px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 40px;
+        }
+
+        .storage-label {
+            margin-left: 21px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 14px;
+        }
+
+        /* Center header section */
+        .header-center {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+
+        /* Navigation icons */
+        .nav-icons-container {
+            display: flex;
+            height: 100%;
+            border-radius: 20px;
+            border: 1px solid #e7e7f0;
+            background-color: white;
+            width: auto;
+            padding: 0;
+        }
+
+        .nav-icon {
+            position: relative;
+            height: 100%;
+            min-width: 84px;
+        }
+
+        .nav-icon-item {
+            width: 100%;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .nav-icon:first-child .nav-icon-item {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+        }
+
+        .nav-icon:last-child .nav-icon-item {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .nav-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .nav-icon-divider {
+            position: absolute;
+            width: 1px;
+            height: 75px;
+            top: 0;
+            right: 0;
+            background-color: #e7e7f0;
+            z-index: 1;
+        }
+
+        .nav-icon-item.active {
+            background-color: #6f4add;
+        }
+
+        .nav-icon-item.active img {
+            filter: brightness(0) invert(1);
+        }
+
+        .nav-icon-item:not(.active):hover {
+            background-color: #f3f0fc;
+            transform: scale(1.05);
+        }
+
+        /* Right header section */
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            flex: 1;
+        }
+
+        /* User profile */
+        .user-profile {
+            position: relative;
+        }
+
+        .profile-card {
+            width: 340px;
+            height: 75px;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .profile-card:hover {
+            border: 1px solid #E7E7F0;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 340px;
+            background-color: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: none;
+            z-index: 20;
+        }
+
+        .profile-card.active + .profile-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f8f9;
+        }
+
+        .dropdown-item img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dropdown-item.logout {
+            color: #db4343;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            margin-left: 12px;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .user-handle {
+            font-weight: 500;
+            color: #ada8ba;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .badges {
+            display: flex;
+            margin-left: 16px;
+            gap: 4px;
+        }
+
+        .badge {
+            height: 26px;
+            padding: 0 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .badge.pro {
+            background-color: #d6c8ff;
+            color: #7450de;
+        }
+
+        .badge.points {
+            background-color: #f4b813;
+            color: #684e06;
+        }
+
+        .points-icon {
+            display: flex;
+            margin-left: 4px;
+        }
+
+        .dropdown-icon {
+            margin-left: auto;
+            width: 11px;
+            height: 7px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            width: 100%;
+            max-width: 1600px;
+            margin-top: 115px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Back link */
+        .back-link {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            color: #6f4add;
+            font-size: 20px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link i {
+            margin-right: 8px;
+        }
+
+        /* Guides container */
+        .guides-container {
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 195px);
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        /* Lessons sidebar */
+        .lessons-sidebar {
+            width: 350px;
+            height: 100%;
+            background: #f8f8f9;
+            border-right: 1px solid #e7e7f0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .lessons-sidebar.collapsed {
+            width: 10%;
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #e7e7f0;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .toggle-sidebar i {
+            transition: transform 0.3s;
+        }
+
+        .lessons-sidebar.collapsed .toggle-sidebar i {
+            transform: rotate(180deg);
+        }
+
+        .lessons-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.75);
+        }
+
+        .lessons-sidebar.collapsed .lessons-list {
+            padding: 20px;
+        }
+
+        .lesson-item {
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .lessons-sidebar:not(.collapsed) .lesson-item {
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .lesson-item:hover {
+            background: #f3f0fc;
+        }
+
+        .lesson-item.active {
+            background: #F3F0FC;
+            color: #6F4ADD;
+            border-color: #6f4add;
+        }
+
+        .full-text {
+            display: block;
+        }
+        
+        .collapsed-text {
+            display: none;
+            font-size: 20px;
+        }
+        
+        .lessons-sidebar.collapsed .full-text {
+            display: none;
+        }
+        
+        .lessons-sidebar.collapsed .collapsed-text {
+            display: block;
+        }
+
+        .progress-container {
+            padding: 20px;
+            border-top: 1px solid #e7e7f0;
+            background-color: white;
+        }
+        
+        .lessons-sidebar.collapsed .progress-container {
+            padding: 10px;
+        }
+
+        .progress-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .lessons-sidebar.collapsed .progress-label span:first-child {
+            display: none;
+        }
+        
+        .lessons-sidebar.collapsed .progress-label {
+            justify-content: center;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e7e7f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #6cdd4a;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .complete-course-btn {
+            display: none;
+            width: 100%;
+            padding: 20px;
+            margin-top: 15px;
+            background-color: #dcecda;
+            color: #3ea035;
+            border: none;
+            font-size: 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .complete-course-btn:hover {
+            background-color: #88f07a;
+        }
+        
+        .lessons-sidebar.collapsed .complete-course-btn {
+            font-size: 0px;
+            padding: 20px;
+        }
+        
+        .lessons-sidebar.collapsed .complete-course-btn::after {
+            content: "✓";
+            font-size: 16px;
+        }
+
+        /* Lesson content */
+        .lesson-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+        }
+
+        .lesson-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .lesson-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .lesson-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .section-text {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #000000;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .nav-icon-item {
+                width: 70px;
+            }
+            
+            .profile-card {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px;
+            }
+            
+            .header-left, .header-center, .header-right {
+                flex: none;
+                width: 100%;
+                justify-content: center;
+                margin: 5px 0;
+            }
+            
+            .storage-label {
+                display: none;
+            }
+
+            .profile-card {
+                width: 250px;
+            }
+
+            .main-content {
+                margin-top: 200px;
+            }
+
+            .guides-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .lessons-sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e7e7f0;
+            }
+
+            .lessons-sidebar.collapsed {
+                width: 100%;
+                height: 60px;
+            }
+
+            .toggle-sidebar {
+                right: 20px;
+            }
+
+            .lessons-list {
+                display: flex;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding: 10px;
+            }
+
+            .lesson-item {
+                min-width: 200px;
+                margin-right: 10px;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .lesson-content {
+                padding: 20px;
+            }
+
+            .lesson-title {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lesson-item {
+                min-width: 160px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Fixed header -->
+        <div class="header-container">
+            <header class="main-header">
+                <!-- Left section -->
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="logo-icon"></div>
+                        <span class="logo-text">AISEO</span>
+                    </div>
+                    <span class="storage-label">Гайды</span>
+                </div>
+
+                <!-- Center section -->
+                <div class="header-center">
+                    <!-- Navigation icons -->
+                    <div class="nav-icons-container">
+                        <!-- Icons will be inserted by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right section -->
+                <div class="header-right">
+                    <!-- User profile -->
+                    <div class="user-profile">
+                        <div class="profile-card">
+                            <div class="avatar">
+                                <img src="change-image-here.png" alt="User avatar">
+                            </div>
+                            <div class="user-info">
+                                <p class="username">Константин</p>
+                                <p class="user-handle">nikonstantinn</p>
+                            </div>
+                            <div class="badges">
+                                <div class="badge pro">PRO</div>
+                                <div class="badge points">
+                                    <span>100</span>
+                                    <div class="points-icon">
+                                        <img src="icon-dot.svg" alt="Generators"> 
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="dropdown-icon" src="icon-1.svg" alt="Dropdown">
+                        </div>
+                        
+                        <div class="profile-dropdown">
+                            <button class="dropdown-item">
+                                <img src="icon-9.svg" alt="Подписка">
+                                <span>Подписка</span>
+                            </button>
+                            <button class="dropdown-item">
+                                <img src="icon-5.svg" alt="Настройки">
+                                <span>Настройки</span>
+                            </button>
+                            <button class="dropdown-item logout">
+                                <img src="icon-10.svg" alt="Выйти">
+                                <span>Выйти</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Back link -->
+            <a href="gides.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> К списку гайдов
+            </a>
+            
+            <!-- Guides container -->
+            <div class="guides-container">
+                <!-- Lessons sidebar -->
+                <div class="lessons-sidebar" id="lessonsSidebar">
+                    <div class="toggle-sidebar" onclick="toggleSidebar()">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    
+                    <div class="lessons-list" id="lessonsList">
+                        <div class="lesson-item active" data-lesson="1" onclick="selectLesson(1)">
+                            <span class="full-text">1 урок: Создание коллекции</span>
+                            <span class="collapsed-text">1 ур.</span>
+                        </div>
+                        <div class="lesson-item" data-lesson="2" onclick="selectLesson(2)">
+                            <span class="full-text">2 урок: Добавление объектов</span>
+                            <span class="collapsed-text">2 ур.</span>
+                        </div>
+                        <div class="lesson-item" data-lesson="3" onclick="selectLesson(3)">
+                            <span class="full-text">3 урок: Организация</span>
+                            <span class="collapsed-text">3 ур.</span>
+                        </div>
+                        <div class="lesson-item" data-lesson="4" onclick="selectLesson(4)">
+                            <span class="full-text">4 урок: Совместная работа</span>
+                            <span class="collapsed-text">4 ур.</span>
+                        </div>
+                        <div class="lesson-item" data-lesson="5" onclick="selectLesson(5)">
+                            <span class="full-text">5 урок: Экспорт</span>
+                            <span class="collapsed-text">5 ур.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Прогресс</span>
+                            <span id="progressPercent">20%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+                        </div>
+                        <button class="complete-course-btn" id="completeCourseBtn">Завершить курс</button>
+                    </div>
+                </div>
+                
+                <!-- Lesson content -->
+                <div class="lesson-content" id="lessonContent">
+                    <h1 class="lesson-title">1 урок: Создание коллекции</h1>
+                    
+                    <img src="gide-1.png" alt="Изображение урока" class="lesson-image">
+                    
+                    <div class="lesson-section">
+                        <h2 class="section-title">Введение</h2>
+                        <p class="section-text">Коллекции в AISEO позволяют вам организовывать ваши работы в тематические группы. Это особенно полезно, когда у вас много проектов и вам нужно быстро находить нужные материалы.</p>
+                    </div>
+                    
+                    <div class="lesson-section">
+                        <h2 class="section-title">Шаг 1: Создание новой коллекции</h2>
+                        <p class="section-text">Чтобы создать новую коллекцию, нажмите на кнопку "Новая коллекция" в верхнем правом углу экрана. Введите название для вашей коллекции и при необходимости добавьте описание.</p>
+                    </div>
+                    
+                    <div class="lesson-section">
+                        <h2 class="section-title">Шаг 2: Настройки коллекции</h2>
+                        <p class="section-text">После создания коллекции вы можете настроить ее параметры. Выберите тип коллекции (публичная или приватная), установите обложку и настройте права доступа для других пользователей, если это необходимо.</p>
+                    </div>
+                    
+                    <div class="lesson-section">
+                        <h2 class="section-title">Шаг 3: Сохранение изменений</h2>
+                        <p class="section-text">Не забудьте сохранить все изменения, нажав кнопку "Сохранить". Теперь ваша коллекция готова к использованию!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Navigation data
+        const navItems = [
+            { 
+                id: 1, 
+                src: "frame-73.svg", 
+                alt: "ImagG", 
+                title: "Генерация изображений",
+                page: "generativeim.html"
+            },
+            { 
+                id: 2, 
+                src: "icon-11.svg", 
+                alt: "ClipG", 
+                title: "Генерация видео",
+                page: "videogeneration.html" 
+            },
+            { 
+                id: 3, 
+                src: "icon-7.svg", 
+                alt: "Gide", 
+                title: "Гайды",
+                page: "gides.html" 
+            },
+            { 
+                id: 4, 
+                src: "icon-6.svg", 
+                alt: "Collect", 
+                title: "Коллекции",
+                page: "collections.html" 
+            },
+            { 
+                id: 5, 
+                src: "icon-4.svg", 
+                alt: "Pictur", 
+                title: "Хранилище",
+                page: "pictures.html" 
+            }
+        ];
+
+        // Current page detection
+        function getCurrentPage() {
+            return window.location.pathname.split('/').pop() || 'generativeim.html';
+        }
+
+        // Render navigation
+        function renderNavItems() {
+            const navContainer = document.querySelector('.nav-icons-container');
+            if (!navContainer) return;
+
+            const currentPage = getCurrentPage();
+            
+            navContainer.innerHTML = navItems.map((item, index) => {
+                const isActive = item.page === currentPage;
+                return `
+                <div class="nav-icon" title="${item.title}">
+                    <a href="${isActive ? '#' : item.page}" 
+                       class="nav-icon-item ${index === 0 ? 'first' : ''} ${index === navItems.length - 1 ? 'last' : ''}
+                       ${isActive ? 'active' : ''}">
+                        <img src="${item.src}" alt="${item.alt}">
+                    </a>
+                    ${index < navItems.length - 1 ? '<div class="nav-icon-divider"></div>' : ''}
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Profile dropdown functionality
+        function setupProfileDropdown() {
+            const profileCard = document.querySelector('.profile-card');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            
+            if (profileCard) {
+                profileCard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    profileCard.classList.toggle('active');
+                });
+            }
+            
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.user-profile')) {
+                    document.querySelector('.profile-card.active')?.classList.remove('active');
+                }
+            });
+            
+            if (dropdownItems) {
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = item.querySelector('span').textContent;
+                        if (action === 'Выйти') {
+                            window.location.href = 'login.html';
+                        } else {
+                            alert(`Вы выбрали: ${action}`);
+                        }
+                        document.querySelector('.profile-card.active')?.classList.remove('active');
+                    });
+                });
+            }
+        }
+
+        // Update page title and storage label
+        function updatePageInfo() {
+            const currentPage = getCurrentPage();
+            const pageData = navItems.find(item => item.page === currentPage);
+            if (pageData) {
+                document.title = `AISEO ${pageData.title}`;
+                const storageLabel = document.querySelector('.storage-label');
+                if (storageLabel) storageLabel.textContent = pageData.title;
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('lessonsSidebar');
+            sidebar.classList.toggle('collapsed');
+            
+            // Update progress when collapsing/expanding
+            updateProgress();
+        }
+
+        // Select lesson
+        function selectLesson(lessonNumber) {
+            // Remove active class from all lessons
+            const lessons = document.querySelectorAll('.lesson-item');
+            lessons.forEach(lesson => lesson.classList.remove('active'));
+            
+            // Add active class to selected lesson
+            const selectedLesson = document.querySelector(`.lesson-item[data-lesson="${lessonNumber}"]`);
+            selectedLesson.classList.add('active');
+            
+            // Update lesson content (in a real app, this would load content from server)
+            updateLessonContent(lessonNumber);
+            
+            // Update progress
+            updateProgress();
+        }
+
+        // Update lesson content
+        function updateLessonContent(lessonNumber) {
+            const lessonContent = document.getElementById('lessonContent');
+            // In a real app, you would load content from server here
+            // For demo, we'll just change the title
+            const titles = [
+                "1 урок: Создание коллекции",
+                "2 урок: Добавление объектов",
+                "3 урок: Организация",
+                "4 урок: Совместная работа",
+                "5 урок: Экспорт"
+            ];
+            
+            const contents = [
+                `<h1 class="lesson-title">${titles[0]}</h1>
+                <img src="gide-1.png" alt="Изображение урока" class="lesson-image">
+                <div class="lesson-section">
+                    <h2 class="section-title">Введение</h2>
+                    <p class="section-text">Коллекции в AISEO позволяют вам организовывать ваши работы в тематические группы. Это особенно полезно, когда у вас много проектов и вам нужно быстро находить нужные материалы.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 1: Создание новой коллекции</h2>
+                    <p class="section-text">Чтобы создать новую коллекцию, нажмите на кнопку "Новая коллекция" в верхнем правом углу экрана. Введите название для вашей коллекции и при необходимости добавьте описание.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 2: Настройки коллекции</h2>
+                    <p class="section-text">После создания коллекции вы можете настроить ее параметры. Выберите тип коллекции (публичная или приватная), установите обложку и настройте права доступа для других пользователей, если это необходимо.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 3: Сохранение изменений</h2>
+                    <p class="section-text">Не забудьте сохранить все изменения, нажав кнопку "Сохранить". Теперь ваша коллекция готова к использованию!</p>
+                </div>`,
+                
+                `<h1 class="lesson-title">${titles[1]}</h1>
+                <img src="gide-1.png" alt="Изображение урока" class="lesson-image">
+                <div class="lesson-section">
+                    <h2 class="section-title">Введение</h2>
+                    <p class="section-text">После создания коллекции вы можете начать добавлять в нее объекты. Объектами могут быть изображения, документы или другие файлы, которые вы хотите сохранить вместе.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 1: Добавление файлов</h2>
+                    <p class="section-text">Нажмите кнопку "Добавить объекты" и выберите файлы с вашего компьютера. Вы можете загружать несколько файлов одновременно.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 2: Описание объектов</h2>
+                    <p class="section-text">Для каждого объекта вы можете добавить описание, теги и другие метаданные, которые помогут вам в дальнейшем быстро находить нужные файлы.</p>
+                </div>`,
+                
+                `<h1 class="lesson-title">${titles[2]}</h1>
+                <img src="gide-1.png" alt="Изображение урока" class="lesson-image">
+                <div class="lesson-section">
+                    <h2 class="section-title">Введение</h2>
+                    <p class="section-text">Хорошая организация коллекции поможет вам и вашей команде эффективно работать с материалами.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 1: Сортировка</h2>
+                    <p class="section-text">Используйте перетаскивание для изменения порядка объектов в коллекции. Вы также можете сортировать их по дате, названию или другим параметрам.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 2: Группировка</h2>
+                    <p class="section-text">Создавайте группы объектов внутри коллекции для лучшей организации. Например, вы можете группировать файлы по проектам или темам.</p>
+                </div>`,
+                
+                `<h1 class="lesson-title">${titles[3]}</h1>
+                <img src="gide-1.png" alt="Изображение урока" class="lesson-image">
+                <div class="lesson-section">
+                    <h2 class="section-title">Введение</h2>
+                    <p class="section-text">AISEO позволяет работать над коллекциями совместно с другими пользователями.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 1: Приглашение участников</h2>
+                    <p class="section-text">Нажмите кнопку "Пригласить" и введите email пользователей, которых вы хотите добавить в коллекцию. Вы можете установить разные уровни доступа для каждого участника.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 2: Комментирование</h2>
+                    <p class="section-text">Участники коллекции могут оставлять комментарии к объектам, обсуждать изменения и предлагать идеи.</p>
+                </div>`,
+                
+                `<h1 class="lesson-title">${titles[4]}</h1>
+                <img src="gide-1.png" alt="Изображение урока" class="lesson-image">
+                <div class="lesson-section">
+                    <h2 class="section-title">Введение</h2>
+                    <p class="section-text">Когда ваша коллекция готова, вы можете экспортировать ее содержимое для использования вне платформы AISEO.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 1: Выбор формата</h2>
+                    <p class="section-text">Выберите формат экспорта (ZIP-архив, PDF-презентация или другие доступные варианты) в зависимости от ваших нужд.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 2: Настройка экспорта</h2>
+                    <p class="section-text">Укажите, какие объекты вы хотите экспортировать (все или только выбранные), и настройте параметры качества и размера файлов.</p>
+                </div>
+                <div class="lesson-section">
+                    <h2 class="section-title">Шаг 3: Загрузка</h2>
+                    <p class="section-text">Нажмите кнопку "Экспортировать" и дождитесь завершения процесса. Ваши файлы будут автоматически загружены на ваш компьютер.</p>
+                </div>`
+            ];
+            
+            lessonContent.innerHTML = contents[lessonNumber - 1];
+        }
+
+        // Update progress
+        function updateProgress() {
+            const activeLesson = document.querySelector('.lesson-item.active');
+            const lessonNumber = activeLesson ? parseInt(activeLesson.getAttribute('data-lesson')) : 1;
+            const totalLessons = document.querySelectorAll('.lesson-item').length;
+            
+            // Calculate progress (20% per lesson)
+            const progress = (lessonNumber / totalLessons) * 100;
+            
+            // Update progress bar
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+            
+            // Show/hide complete course button
+            const completeBtn = document.getElementById('completeCourseBtn');
+            if (progress >= 100) {
+                completeBtn.style.display = 'block';
+            } else {
+                completeBtn.style.display = 'none';
+            }
+        }
+
+        // Complete course
+        function setupCompleteCourseButton() {
+            const completeBtn = document.getElementById('completeCourseBtn');
+            if (completeBtn) {
+                completeBtn.addEventListener('click', function() {
+                    if (confirm('Вы уверены, что хотите завершить курс?')) {
+                        alert('Курс успешно завершен!');
+                        // Here you would typically send a request to the server
+                    }
+                });
+            }
+        }
+
+        // Initialize
+        function init() {
+            renderNavItems();
+            setupProfileDropdown();
+            updatePageInfo();
+            setupCompleteCourseButton();
+            
+            // Set first lesson as active by default
+            selectLesson(1);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

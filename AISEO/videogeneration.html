@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISEO Генерация видеоклипов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f9;
+            color: #333;
+            padding-left: calc(100vw - 100%);
+        }
+
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Header styles */
+        .header-container {
+            width: 100%;
+            max-width: 1600px;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            background-color: #f8f8f9;
+            padding-top: 20px;
+        }
+
+        .main-header {
+            width: 100%;
+            height: 75px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        /* Left header section */
+        .header-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            height: 48px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 33px;
+            background-image: url('union.svg');
+            background-size: 100% 100%;
+        }
+
+        .logo-text {
+            margin-left: 9px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 40px;
+        }
+
+        .storage-label {
+            margin-left: 21px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 14px;
+        }
+
+        .btn{
+            width: auto;
+            color:white;
+            background:#6f4add;
+            padding: 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 20px;
+        }
+
+        .btn:hover {
+            background-color: #4622B0 ;
+        }
+
+        /* Center header section */
+        .header-center {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+
+        /* Navigation icons */
+        .nav-icons-container {
+            display: flex;
+            height: 100%;
+            border-radius: 20px;
+            border: 1px solid #e7e7f0;
+            background-color: white;
+            width: auto;
+            padding: 0;
+        }
+
+        .nav-icon {
+            position: relative;
+            height: 100%;
+            min-width: 84px;
+        }
+
+        .nav-icon-item {
+            width: 100%;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .nav-icon:first-child .nav-icon-item {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+        }
+
+        .nav-icon:last-child .nav-icon-item {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .nav-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .nav-icon-divider {
+            position: absolute;
+            width: 1px;
+            height: 75px;
+            top: 0;
+            right: 0;
+            background-color: #e7e7f0;
+            z-index: 1;
+        }
+
+        .nav-icon-item.active {
+            background-color: #6f4add;
+        }
+
+        .nav-icon-item.active img {
+            filter: brightness(0) invert(1);
+        }
+
+        .nav-icon-item:not(.active):hover {
+            background-color: #f3f0fc;
+            transform: scale(1.05);
+        }
+
+        /* Right header section */
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            flex: 1;
+        }
+
+        /* User profile */
+        .user-profile {
+            position: relative;
+        }
+
+        .profile-card {
+            width: 340px;
+            height: 75px;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .profile-card:hover {
+            border: 1px solid #E7E7F0;
+        }
+
+        .maintext{
+            font-size: 24px;
+            font-weight: 1000;
+            color:#C7C7D1;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 340px;
+            background-color: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: none;
+            z-index: 20;
+        }
+
+        .profile-card.active + .profile-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f8f9;
+        }
+
+        .dropdown-item img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dropdown-item.logout {
+            color: #db4343;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            margin-left: 12px;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .user-handle {
+            font-weight: 500;
+            color: #ada8ba;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .badges {
+            display: flex;
+            margin-left: 16px;
+            gap: 4px;
+        }
+
+        .badge {
+            height: 26px;
+            padding: 0 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .badge.pro {
+            background-color: #d6c8ff;
+            color: #7450de;
+        }
+
+        .badge.points {
+            background-color: #f4b813;
+            color: #684e06;
+        }
+
+        .points-icon {
+            display: flex;
+            margin-left: 4px;
+        }
+
+        .dropdown-icon {
+            margin-left: auto;
+            width: 11px;
+            height: 7px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            width: 100%;
+            max-width: 1600px;
+            margin-top: 115px;
+            padding: 20px;
+        }
+        .clip{
+            height: 600px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .image {
+            width: 49.7%;
+            height: 100%;
+            background-color: #F0F0F2;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .image:hover {
+            background-color: #e7e7f0;
+            box-shadow: 0 0 0 2px #6f4add;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .remove-image-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2;
+        }
+
+        .image:hover .remove-image-btn {
+            opacity: 1;
+        }
+
+        .video{
+            width: 49.7%;
+            height: 100%;
+            background-color: #F0F0F2;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .parameters {
+            width: 100%;
+            padding-top: 30px;
+            height: 311px;
+        }
+
+        /* Основной контейнер параметров */
+        .params-main-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            padding-top: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        /* Левый блок с промтом */
+        .prompt-container {
+            flex: 1 1 auto;
+            background-color: white;
+            border-radius: 25px;
+            padding: 25px;
+            min-width: 300px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .prompt-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .prompt-tabs {
+            display: flex;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 4px;
+            font-size: 20px;
+        }
+
+        .prompt-tab {
+            padding: 20px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-weight: 500;
+            color: #5B546F;
+            position: relative;
+        }
+
+        .prompt-tab:hover {
+            background:#F3F0FC;
+        }
+
+        .prompt-tab.active {
+            background-color: #F3F0FC;
+            color: #6f4add;
+            font-weight: 600;
+        }
+
+        .prompt-tab.has-content::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            background-color: #6f4add;
+            border-radius: 50%;
+        }
+
+        .prompt-textarea-container {
+            position: relative;
+            min-height: 200px;
+        }
+
+        .prompt-textarea {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            transition: ease 0.2s;
+            min-height: 200px;
+            border-radius: 20px;
+            background-color: #ffffff;
+            resize: none;
+            padding: 30px;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            outline: none;
+        }
+
+        .prompt-textarea:hover {
+            background-color: #f7f6f8;
+        }
+
+        .prompt-textarea:focus {
+            background-color: #f7f6f8;
+        }
+
+        .negative-prompt-textarea {
+            display: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: ease 0.2s;
+        }
+
+        .prompt-textarea.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Правый блок с параметрами */
+        .params-container {
+            width: 238px;
+            overflow-y: auto;
+            height: 325px;
+        }
+
+        .param-button {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 20px;
+            text-align: left;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            transition: all 0.2s;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .param-button:hover {
+            background: white;
+            border: 1px solid #E7E7F0;
+        }
+
+        .param-button.active {
+            background: #F3F0FC;
+            color: #6F4ADD;
+        }
+
+        .param-value {
+            font-weight: normal;
+            color: #999;
+            font-size: 16px;
+        }
+
+        /* Контейнер с расширенными параметрами */
+        .params-expanded-container {
+            width: 0;
+            opacity: 0;
+            background-color: white;
+            border-radius: 25px;
+            padding: 0;
+            margin-left: 0;
+            height: 325px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            visibility: hidden;
+        }
+
+        .params-expanded-container.active {
+            width: 350px;
+            opacity: 1;
+            padding: 25px;
+            margin-left: 30px;
+            visibility: visible;
+        }
+
+        .param-section {
+            margin-bottom: 20px;
+        }
+
+        .param-section-title {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .param-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .param-option {
+            padding: 20px;
+            border-radius: 20px;
+            background-color: #f7f6f8;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+        }
+
+        .param-option:hover {
+            background-color: #e7e7f0;
+        }
+
+        .param-option.selected {
+            background-color: #F1EEFA;
+            color: #6F4ADD;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .params-expanded-container.active {
+                width: 300px;
+            }
+            
+            .prompt-container {
+                width: 40%;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .params-main-container {
+                flex-direction: column;
+            }
+            
+            .params-container {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                margin-bottom: 20px;
+            }
+            
+            .params-expanded-container {
+                height: auto;
+                max-height: 0;
+            }
+            
+            .params-expanded-container.active {
+                width: 100%;
+                max-height: 500px;
+                margin-left: 0;
+                margin-top: 20px;
+            }
+            
+            .prompt-container {
+                width: 100%;
+            }
+            
+            .nav-icon-item {
+                width: 70px;
+            }
+            
+            .profile-card {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px;
+            }
+            
+            .header-left, .header-center, .header-right {
+                flex: none;
+                width: 100%;
+                justify-content: center;
+                margin: 5px 0;
+            }
+            
+            .storage-label {
+                display: none;
+            }
+
+            .profile-card {
+                width: 250px;
+            }
+
+            .main-content {
+                margin-top: 200px;
+            }
+            
+            .image, .video {
+                height: 300px;
+            }
+
+            .param-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .prompt-tabs {
+                font-size: 16px;
+            }
+            
+            .prompt-tab {
+                padding: 6px 12px;
+            }
+            
+            .param-button {
+                font-size: 18px;
+                height: 50px;
+                padding: 10px 12px;
+            }
+
+            .param-option {
+                padding: 15px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Fixed header -->
+        <div class="header-container">
+            <header class="main-header">
+                <!-- Left section -->
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="logo-icon"></div>
+                        <span class="logo-text">AISEO</span>
+                    </div>
+                    <span class="storage-label">Генерация видеоклипов</span>
+                </div>
+
+                <!-- Center section -->
+                <div class="header-center">
+                    <!-- Navigation icons -->
+                    <div class="nav-icons-container">
+                        <!-- Icons will be inserted by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right section -->
+                <div class="header-right">
+                    <!-- User profile -->
+                    <div class="user-profile">
+                        <div class="profile-card">
+                            <div class="avatar">
+                                <img src="change-image-here.png" alt="User avatar">
+                            </div>
+                            <div class="user-info">
+                                <p class="username">Константин</p>
+                                <p class="user-handle">nikonstantinn</p>
+                            </div>
+                            <div class="badges">
+                                <div class="badge pro">PRO</div>
+                                <div class="badge points">
+                                    <span>100</span>
+                                    <div class="points-icon">
+                                        <img src="icon-dot.svg" alt="Generators"> 
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="dropdown-icon" src="icon-1.svg" alt="Dropdown">
+                        </div>
+                        
+                        <div class="profile-dropdown">
+                            <button class="dropdown-item">
+                                <img src="icon-9.svg" alt="Подписка">
+                                <span>Подписка</span>
+                            </button>
+                            <button class="dropdown-item">
+                                <img src="icon-5.svg" alt="Настройки">
+                                <span>Настройки</span>
+                            </button>
+                            <button class="dropdown-item logout">
+                                <img src="icon-10.svg" alt="Выйти">
+                                <span>Выйти</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="clip">
+                <div class="image" id="image-upload">
+                    <h2 class="maintext">Загрузите первый кадр</h2>
+                    <img class="image-preview" id="image-preview" src="" alt="Preview">
+                    <button class="remove-image-btn" id="remove-image-btn" hidden>Удалить</button>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                </div>
+                <div class="video">
+                    <h2 class="maintext">Здесь будет готовый клип</h2>
+                </div>
+            </div>
+
+            <div class="params-main-container">
+                <!-- Левый блок с промтом -->
+                <div class="prompt-container">
+                    <div class="prompt-header">
+                        <div class="prompt-tabs">
+                            <div class="prompt-tab active" id="prompt-tab">Промт</div>
+                            <div class="prompt-tab" id="negative-prompt-tab">Отрицательный промт</div>
+                        </div>
+                    <button class="btn">Генерация</button>
+                    </div>
+                    <div class="prompt-textarea-container">
+                        <textarea class="prompt-textarea" id="prompt-textarea" placeholder="Введите текст"></textarea>
+                        <textarea class="prompt-textarea negative-prompt-textarea" id="negative-prompt-textarea" placeholder="Введите текст, который не должен появляться в изображении"></textarea>
+                    </div>
+                </div>
+    
+                <!-- Правый блок с параметрами -->
+                <div class="params-container">
+                    <!-- Кнопки параметров -->
+                    <button class="param-button" data-target="styles-options">
+                        <span>Стили <span class="param-value">Реализм</span></span>
+                    </button>
+                    <button class="param-button" data-target="content-options">
+                        <span>Содержание</span>
+                    </button>
+                    <button class="param-button" data-target="quantity-options">
+                        <span>Количество</span>
+                    </button>
+                    <button class="param-button" data-target="size-options">
+                        <span>Размер</span>
+                    </button>
+                    <button class="param-button" data-target="metal-options">
+                        <span>Металлы</span>
+                    </button>
+                </div>
+                
+                <!-- Контейнер для расширенных параметров -->
+                <div class="params-expanded-container" id="expanded-options">
+                    <!-- Стили -->
+                    <div class="param-section" id="styles-options">
+                        <div class="param-section-title">Стиль</div>
+                        <div class="param-options">
+                            <div class="param-option selected">Реализм</div>
+                            <div class="param-option">Киберпанк</div>
+                            <div class="param-option">Минимализм</div>
+                            <div class="param-option">Импрессионизм</div>
+                            <div class="param-option">Сюрреализм</div>
+                            <div class="param-option">Пиксель-арт</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Металлы -->
+                    <div class="param-section" id="metal-options">
+                        <div class="param-section-title">Металлы</div>
+                        <div class="param-options">
+                            <div class="param-option">Железо</div>
+                            <div class="param-option">Золото</div>
+                            <div class="param-option">Медь</div>
+                            <div class="param-option selected">Сталь</div>
+                            <div class="param-option">Серебро</div>
+                            <div class="param-option">Титан</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Содержание -->
+                    <div class="param-section" id="content-options">
+                        <div class="param-section-title">Содержание</div>
+                        <div class="param-options">
+                            <div class="param-option selected">Люди</div>
+                            <div class="param-option">Животные</div>
+                            <div class="param-option">Пейзажи</div>
+                            <div class="param-option">Архитектура</div>
+                            <div class="param-option">Техника</div>
+                            <div class="param-option">Абстракция</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Количество -->
+                    <div class="param-section" id="quantity-options">
+                        <div class="param-section-title">Количество</div>
+                        <div class="param-options">
+                            <div class="param-option">1</div>
+                            <div class="param-option selected">4</div>
+                            <div class="param-option">9</div>
+                            <div class="param-option">16</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Размер -->
+                    <div class="param-section" id="size-options">
+                        <div class="param-section-title">Размер</div>
+                        <div class="param-options">
+                            <div class="param-option">512x512</div>
+                            <div class="param-option selected">768x768</div>
+                            <div class="param-option">1024x1024</div>
+                            <div class="param-option">1920x1080</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Navigation data
+        const navItems = [
+            { 
+                id: 1, 
+                src: "frame-73.svg", 
+                alt: "ImagG", 
+                title: "Генерация изображений",
+                page: "generativeim.html"
+            },
+            { 
+                id: 2, 
+                src: "icon-11.svg", 
+                alt: "ClipG", 
+                title: "Генерация видео",
+                page: "videogeneration.html" 
+            },
+            { 
+                id: 3, 
+                src: "icon-7.svg", 
+                alt: "Gide", 
+                title: "Гайды",
+                page: "gides.html" 
+            },
+            { 
+                id: 4, 
+                src: "icon-6.svg", 
+                alt: "Collect", 
+                title: "Коллекции",
+                page: "collections.html" 
+            },
+            { 
+                id: 5, 
+                src: "icon-4.svg", 
+                alt: "Pictur", 
+                title: "Хранилище",
+                page: "pictures.html" 
+            }
+        ];
+
+        // Current page detection
+        function getCurrentPage() {
+            return window.location.pathname.split('/').pop() || 'generativeim.html';
+        }
+
+        // Render navigation
+        function renderNavItems() {
+            const navContainer = document.querySelector('.nav-icons-container');
+            if (!navContainer) return;
+
+            const currentPage = getCurrentPage();
+            
+            navContainer.innerHTML = navItems.map((item, index) => {
+                const isActive = item.page === currentPage;
+                return `
+                <div class="nav-icon" title="${item.title}">
+                    <a href="${isActive ? '#' : item.page}" 
+                       class="nav-icon-item ${index === 0 ? 'first' : ''} ${index === navItems.length - 1 ? 'last' : ''}
+                       ${isActive ? 'active' : ''}">
+                        <img src="${item.src}" alt="${item.alt}">
+                    </a>
+                    ${index < navItems.length - 1 ? '<div class="nav-icon-divider"></div>' : ''}
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Profile dropdown functionality
+        function setupProfileDropdown() {
+            const profileCard = document.querySelector('.profile-card');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            
+            if (profileCard) {
+                profileCard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    profileCard.classList.toggle('active');
+                });
+            }
+            
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.user-profile')) {
+                    document.querySelector('.profile-card.active')?.classClassList.remove('active');
+                }
+            });
+            
+            if (dropdownItems) {
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = item.querySelector('span').textContent;
+                        if (action === 'Выйти') {
+                            window.location.href = 'login.html';
+                        } else {
+                            alert(`Вы выбрали: ${action}`);
+                        }
+                        document.querySelector('.profile-card.active')?.classList.remove('active');
+                    });
+                });
+            }
+        }
+
+        // Update page title and storage label
+        function updatePageInfo() {
+            const currentPage = getCurrentPage();
+            const pageData = navItems.find(item => item.page === currentPage);
+            if (pageData) {
+                document.title = `AISEO ${pageData.title}`;
+            }
+        }
+
+        // Управление параметрами
+        function setupParameters() {
+            const paramButtons = document.querySelectorAll('.param-button');
+            const expandedContainer = document.getElementById('expanded-options');
+            const promptContainer = document.querySelector('.prompt-container');
+            const paramOptions = document.querySelectorAll('.param-option');
+            let currentActiveButton = null;
+            let currentActiveSection = null;
+
+            // Показать нужную секцию параметров
+            function showSection(sectionId) {
+                document.querySelectorAll('.param-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.style.display = 'block';
+                    currentActiveSection = sectionId;
+                }
+            }
+
+            // Обработка выбора опций
+            paramOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Удаляем класс selected у всех опций в этой секции
+                    const parentSection = this.closest('.param-section');
+                    parentSection.querySelectorAll('.param-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Добавляем класс selected текущей опции
+                    this.classList.add('selected');
+                    
+                    // Обновляем значение в кнопке параметра
+                    if (currentActiveButton) {
+                        const paramName = currentActiveButton.querySelector('span').textContent.split(' ')[0];
+                        const paramValue = this.textContent;
+                        currentActiveButton.innerHTML = `<span>${paramName} <span class="param-value">${paramValue}</span></span>`;
+                    }
+                });
+            });
+
+            paramButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const isSameButton = currentActiveButton === this;
+                    
+                    // Если кликнули на ту же кнопку - закрываем
+                    if (isSameButton) {
+                        this.classList.remove('active');
+                        expandedContainer.classList.remove('active');
+                        promptContainer.style.flex = '';
+                        currentActiveButton = null;
+                        currentActiveSection = null;
+                        return;
+                    }
+                    
+                    // Убираем активное состояние у всех кнопок
+                    paramButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Добавляем активное состояние текущей кнопке
+                    this.classList.add('active');
+                    currentActiveButton = this;
+                    
+                    // Показываем контейнер расширенных параметров
+                    expandedContainer.classList.add('active');
+                    
+                    // Показываем соответствующую секцию
+                    showSection(targetId);
+                    
+                    // Уменьшаем ширину контейнера промта
+                    promptContainer.style.flex = '1';
+                });
+            });
+
+            // Закрытие при клике вне контейнера
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.params-container') && 
+                    !e.target.closest('.params-expanded-container') && 
+                    !e.target.classList.contains('param-button')) {
+                    
+                    if (currentActiveButton) {
+                        currentActiveButton.classList.remove('active');
+                        expandedContainer.classList.remove('active');
+                        promptContainer.style.flex = '';
+                        currentActiveButton = null;
+                        currentActiveSection = null;
+                    }
+                }
+            });
+        }
+
+        // Переключение между промтом и отрицательным промтом
+        function setupPromptTabs() {
+            const promptTab = document.getElementById('prompt-tab');
+            const negativePromptTab = document.getElementById('negative-prompt-tab');
+            const promptTextarea = document.getElementById('prompt-textarea');
+            const negativePromptTextarea = document.getElementById('negative-prompt-textarea');
+            const promptContainer = document.querySelector('.prompt-container');
+            
+            // Проверка заполненности отрицательного промпта
+            function checkNegativePrompt() {
+                if (negativePromptTextarea.value.trim() !== '') {
+                    negativePromptTab.classList.add('has-content');
+                } else {
+                    negativePromptTab.classList.remove('has-content');
+                }
+            }
+            
+            // Инициализация проверки
+            checkNegativePrompt();
+            
+            // Обработчик изменений для отрицательного промпта
+            negativePromptTextarea.addEventListener('input', checkNegativePrompt);
+            
+            promptTab.addEventListener('click', () => {
+                promptTab.classList.add('active');
+                negativePromptTab.classList.remove('active');
+                promptTextarea.style.display = 'block';
+                negativePromptTextarea.style.display = 'none';
+                // Сбрасываем flex свойство при переключении вкладок
+                promptContainer.style.flex = '';
+            });
+            
+            negativePromptTab.addEventListener('click', () => {
+                negativePromptTab.classList.add('active');
+                promptTab.classList.remove('active');
+                negativePromptTextarea.style.display = 'block';
+                promptTextarea.style.display = 'none';
+                // Сбрасываем flex свойство при переключении вкладок
+                promptContainer.style.flex = '';
+            });
+        }
+
+        // Загрузка изображения
+        function setupImageUpload() {
+            const imageUpload = document.getElementById('image-upload');
+            const fileInput = document.getElementById('file-input');
+            const imagePreview = document.getElementById('image-preview');
+            const removeImageBtn = document.getElementById('remove-image-btn');
+            const mainText = imageUpload.querySelector('.maintext');
+
+            imageUpload.addEventListener('click', function(e) {
+                // Не открываем файловый диалог, если кликнули на кнопку удаления или превью
+                if (e.target !== removeImageBtn && e.target !== imagePreview) {
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        imagePreview.src = event.target.result;
+                        imagePreview.style.display = 'block';
+                        mainText.style.display = 'none';
+						removeImageBtn.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            removeImageBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                imagePreview.src = '';
+                imagePreview.style.display = 'none';
+                removeImageBtn.style.display = 'none';
+				mainText.style.display = 'block';
+                fileInput.value = '';
+            });
+        }
+
+        // Initialize
+        function init() {
+            renderNavItems();
+            setupProfileDropdown();
+            updatePageInfo();
+            setupParameters();
+            setupPromptTabs();
+            setupImageUpload();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISEO - Вход в систему</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #6f4add;
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Main container with max-width */
+        .page-container {
+            width: 100%;
+            max-width: 1600px;
+            padding: 0 20px;
+        }
+
+        /* Header styles */
+        .header {
+            width: 100%;
+            max-width: 1600px;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            margin-top: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 33px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        .logo-text {
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        /* Main content styles */
+        .main-content {
+            display: flex;
+            min-height: calc(100vh - 120px);
+            align-items: center;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .left-section {
+            display: flex;
+            align-items: center;
+            height: 400px;
+            width: 700px;
+            justify-content: center;
+            position: relative;
+            background-color: #261559;
+            border-radius: 60px 0 0 60px;
+        }
+
+        .graphic-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .rotated-graphic {
+            position: absolute;
+            width: auto;
+            height: 700px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .right-section {
+            flex: 1;
+            background-color: white;
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+        }
+
+        .auth-container {
+            width: 100%;
+        }
+
+        .auth-header {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .input-container {
+            position: relative;
+            height: 109px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            background-color: #f7f6f8;
+            transition: all 0.3s;
+        }
+
+        .input-container:focus-within {
+            box-shadow: 0 0 0 2px rgba(111, 74, 221, 0.3);
+        }
+
+        .input-field {
+            width: 100%;
+            height: 100%;
+            padding: 40px 20px 20px;
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: #ada8ba;
+            font-weight: bold;
+        }
+
+        .input-label {
+            position: absolute;
+            top: 14px;
+            left: 20px;
+            font-size: 20px;
+            font-weight: normal;
+            color: #000;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus + .input-label,
+        .input-field:not(:placeholder-shown) + .input-label {
+            top: 8px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #ada8ba;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: #6F4ADD;
+        }
+
+        .btn {
+            width: 100%;
+            height: 58px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: #6F4ADD;
+            color: white;
+            margin-top: 67px;
+        }
+
+        .btn-primary:hover {
+            background-color: #5d3ac2;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #6F4ADD;
+            margin-top: 6px;
+            border: 2px solid #6F4ADD;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f3f0fc;
+        }
+
+        /* Footer text */
+        .footer-text {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .left-section {
+                flex: 1.5;
+            }
+            
+            .main-graphic {
+                width: 450px;
+                height: auto;
+            }
+            
+            .rotated-graphic {
+                width: 300px;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .left-section {
+                padding: 20px;
+                flex: none;
+                height: 400px;
+            }
+            
+            .right-section {
+                margin: 0 auto 40px;
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .footer-text {
+                position: static;
+                text-align: center;
+                margin-top: 20px;
+                margin-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <img src="IconAISEO.svg">
+                <span class="logo-text">AISEO</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-link" id="switchAuthLink">Регистрация</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Section (Graphics) -->
+            <div class="left-section">
+                <div class="graphic-container">
+                    <img src="ImageAI.png" alt="Rotated Graphic" class="rotated-graphic">
+                </div>
+            </div>
+
+            <!-- Right Section (Auth Form) -->
+            <div class="right-section">
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <div class="close-btn" id="closeBtn">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <h1 class="auth-title" id="authTitle">Вход в систему</h1>
+                        <p class="auth-subtitle" id="authSubtitle">Войди и начни генерить!</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm">
+                        <div class="input-container">
+                            <input type="email" id="email" class="input-field" placeholder="Введите" required>
+                            <label for="email" class="input-label">Логин</label>
+                            <div class="error-message" id="email-error">Введите корректный email</div>
+                        </div>
+                        
+                        <div class="input-container password-container">
+                            <input type="password" id="password" class="input-field" placeholder="Введите" required>
+                            <label for="password" class="input-label">Пароль</label>
+                            <span class="toggle-password" id="togglePassword">
+                                <i class="far fa-eye"></i>
+                            </span>
+                            <div class="error-message" id="password-error">Пароль должен содержать минимум 6 символов</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" id="loginBtn">Войти</button>
+                        <button type="button" class="btn btn-secondary" id="registerBtn">Регистрация</button>
+                    </form>
+
+                    <!-- Registration Form -->
+                    <form id="registerForm" class="hidden">
+                        <div class="input-container">
+                            <input type="email" id="regEmail" class="input-field" placeholder="Введите" required>
+                            <label for="regEmail" class="input-label" >Логин</label>
+                            <div class="error-message" id="reg-email-error">Введите корректный email</div>
+                        </div>
+                        
+                        <div class="input-container password-container">
+                            <input type="password" id="regPassword" class="input-field" placeholder="Введите" required>
+                            <label for="regPassword" class="input-label">Пароль</label>
+                            <span class="toggle-password" id="toggleRegPassword">
+                                <i class="far fa-eye"></i>
+                            </span>
+                            <div class="error-message" id="reg-password-error">Пароль должен содержать минимум 6 символов</div>
+                        </div>
+                        
+                        <div class="input-container password-container" id="confirmPasswordContainer">
+                            <input type="password" id="confirmPassword" class="input-field" placeholder="Повторите пароль" required>
+                            <label for="confirmPassword" class="input-label">Подтвердите пароль</label>
+                            <span class="toggle-password" id="toggleConfirmPassword">
+                                <i class="far fa-eye"></i>
+                            </span>
+                            <div class="error-message" id="confirm-password-error">Пароли не совпадают</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                        <button type="button" class="btn btn-secondary" id="backToLoginBtn">Войти</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        class AuthForm {
+            constructor() {
+                this.initElements();
+                this.initEventListeners();
+                this.isLoginForm = true;
+            }
+
+            initElements() {
+                // Forms
+                this.loginForm = document.getElementById('loginForm');
+                this.registerForm = document.getElementById('registerForm');
+                
+                // Login form elements
+                this.emailInput = document.getElementById('email');
+                this.passwordInput = document.getElementById('password');
+                this.emailError = document.getElementById('email-error');
+                this.passwordError = document.getElementById('password-error');
+                this.loginBtn = document.getElementById('loginBtn');
+                
+                // Register form elements
+                this.regEmailInput = document.getElementById('regEmail');
+                this.regPasswordInput = document.getElementById('regPassword');
+                this.confirmPasswordInput = document.getElementById('confirmPassword');
+                this.regEmailError = document.getElementById('reg-email-error');
+                this.regPasswordError = document.getElementById('reg-password-error');
+                this.confirmPasswordError = document.getElementById('confirm-password-error');
+                
+                // Buttons
+                this.registerBtn = document.getElementById('registerBtn');
+                this.backToLoginBtn = document.getElementById('backToLoginBtn');
+                this.switchAuthLink = document.getElementById('switchAuthLink');
+                this.closeBtn = document.getElementById('closeBtn');
+                
+                // Password toggles
+                this.togglePassword = document.getElementById('togglePassword');
+                this.toggleRegPassword = document.getElementById('toggleRegPassword');
+                this.toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+                
+                // Text elements
+                this.authTitle = document.getElementById('authTitle');
+                this.authSubtitle = document.getElementById('authSubtitle');
+            }
+
+            initEventListeners() {
+                // Форма
+                this.loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                this.registerForm.addEventListener('submit', (e) => this.handleRegister(e));
+                
+                // Прожатие кнопки
+                this.registerBtn.addEventListener('click', () => this.toggleForms());
+                this.backToLoginBtn.addEventListener('click', () => this.toggleForms());
+                this.switchAuthLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.toggleForms();
+                });
+                
+                // Закрыть регистрацию
+                this.closeBtn.addEventListener('click', () => {
+                    window.location.href = 'index.html';
+                });
+                
+                // Видимость паролей
+                this.togglePassword.addEventListener('click', () => this.togglePasswordVisibility(this.passwordInput, this.togglePassword));
+                this.toggleRegPassword.addEventListener('click', () => this.togglePasswordVisibility(this.regPasswordInput, this.toggleRegPassword));
+                this.toggleConfirmPassword.addEventListener('click', () => this.togglePasswordVisibility(this.confirmPasswordInput, this.toggleConfirmPassword));
+                
+                // ввод
+                this.emailInput.addEventListener('input', () => this.validateEmail(this.emailInput, this.emailError));
+                this.passwordInput.addEventListener('input', () => this.validatePassword(this.passwordInput, this.passwordError));
+                this.regEmailInput.addEventListener('input', () => this.validateEmail(this.regEmailInput, this.regEmailError));
+                this.regPasswordInput.addEventListener('input', () => this.validatePassword(this.regPasswordInput, this.regPasswordError));
+                this.confirmPasswordInput.addEventListener('input', () => this.validateConfirmPassword());
+            }
+
+            toggleForms() {
+                this.isLoginForm = !this.isLoginForm;
+                
+                if (this.isLoginForm) {
+                    this.loginForm.classList.remove('hidden');
+                    this.registerForm.classList.add('hidden');
+                    this.authTitle.textContent = 'Вход в систему';
+                    this.authSubtitle.textContent = 'Войди и начни генерить!';
+                    this.switchAuthLink.textContent = 'Регистрация';
+                } else {
+                    this.loginForm.classList.add('hidden');
+                    this.registerForm.classList.remove('hidden');
+                    this.authTitle.textContent = 'Регистрация';
+                    this.authSubtitle.textContent = 'Создай аккаунт и начни генерить!';
+                    this.switchAuthLink.textContent = 'Войти';
+                }
+            }
+
+            togglePasswordVisibility(inputElement, toggleElement) {
+                const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+                inputElement.setAttribute('type', type);
+                
+                if (type === 'password') {
+                    toggleElement.innerHTML = '<i class="far fa-eye"></i>';
+                } else {
+                    toggleElement.innerHTML = '<i class="far fa-eye-slash"></i>';
+                }
+            }
+
+            validateEmail(input, errorElement) {
+                const isValid = /^\S+@\S+\.\S+$/.test(input.value);
+                errorElement.style.display = isValid ? 'none' : 'block';
+                return isValid;
+            }
+
+            validatePassword(input, errorElement) {
+                const isValid = input.value.length >= 6;
+                errorElement.style.display = isValid ? 'none' : 'block';
+                return isValid;
+            }
+
+            validateConfirmPassword() {
+                const isValid = this.regPasswordInput.value === this.confirmPasswordInput.value;
+                this.confirmPasswordError.style.display = isValid ? 'none' : 'block';
+                return isValid;
+            }
+
+            handleLogin(e) {
+                e.preventDefault();
+                
+                const isEmailValid = this.validateEmail(this.emailInput, this.emailError);
+                const isPasswordValid = this.validatePassword(this.passwordInput, this.passwordError);
+                
+                if (isEmailValid && isPasswordValid) {
+                    // Вместо alert отправляем данные на бэкенд
+async function handleLogin(e) {
+    e.preventDefault();
+    const response = await fetch('http://бэкенд/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            email: this.emailInput.value,
+            password: this.passwordInput.value
+        })
+    });
+    const data = await response.json();
+    if (response.ok) {
+        localStorage.setItem('token', data.access_token); // Сохраняем токен
+        window.location.href = 'generativeim.html'; // Перенаправляем
+    } else {
+        alert(data.detail || 'Ошибка входа');
+    }
+}
+                }
+            }
+
+            handleRegister(e) {
+                e.preventDefault();
+                
+                const isEmailValid = this.validateEmail(this.regEmailInput, this.regEmailError);
+                const isPasswordValid = this.validatePassword(this.regPasswordInput, this.regPasswordError);
+                const isConfirmValid = this.validateConfirmPassword();
+                
+                if (isEmailValid && isPasswordValid && isConfirmValid) {
+                    window.location.href = 'generativeim.html';
+                    // Здесь будет отправка данных на сервер
+                    this.toggleForms(); // Переключаем обратно на форму входа после регистрации
+                }
+            }
+        }
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            new AuthForm();
+        });
+    </script>
+
+<script>
+    document.getElementById('subscriptionButton').addEventListener('click', function() {
+        window.location.href = 'price.html';
+    });
+</script>
+</body>
+</html>

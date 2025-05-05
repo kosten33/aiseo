@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISEO Подписки</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f9;
+            color: #333;
+            padding-left: calc(100vw - 100%);
+        }
+
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Header styles */
+        .header-container {
+            width: 100%;
+            max-width: 1600px;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            background-color: #f8f8f9;
+            padding-top: 20px;
+        }
+
+        .main-header {
+            width: 100%;
+            height: 75px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        /* Left header section */
+        .header-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            height: 48px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 33px;
+            background-image: url('union.svg');
+            background-size: 100% 100%;
+        }
+
+        .logo-text {
+            margin-left: 9px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 40px;
+        }
+
+        .storage-label {
+            margin-left: 21px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 14px;
+        }
+
+        /* Center header section */
+        .header-center {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+
+        /* Navigation icons */
+        .nav-icons-container {
+            display: flex;
+            height: 100%;
+            border-radius: 20px;
+            border: 1px solid #e7e7f0;
+            background-color: white;
+            width: auto;
+            padding: 0;
+        }
+
+        .nav-icon {
+            position: relative;
+            height: 100%;
+            min-width: 84px;
+        }
+
+        .nav-icon-item {
+            width: 100%;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .nav-icon:first-child .nav-icon-item {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+        }
+
+        .nav-icon:last-child .nav-icon-item {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .nav-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .nav-icon-divider {
+            position: absolute;
+            width: 1px;
+            height: 75px;
+            top: 0;
+            right: 0;
+            background-color: #e7e7f0;
+            z-index: 1;
+        }
+
+        .nav-icon-item.active {
+            background-color: #6f4add;
+        }
+
+        .nav-icon-item.active img {
+            filter: brightness(0) invert(1);
+        }
+
+        .nav-icon-item:not(.active):hover {
+            background-color: #f3f0fc;
+            transform: scale(1.05);
+        }
+
+        /* Right header section */
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            flex: 1;
+        }
+
+        /* User profile */
+        .user-profile {
+            position: relative;
+        }
+
+        .profile-card {
+            width: 340px;
+            height: 75px;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .profile-card:hover {
+            border: 1px solid #E7E7F0;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 340px;
+            background-color: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: none;
+            z-index: 20;
+        }
+
+        .profile-card.active + .profile-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f8f9;
+        }
+
+        .dropdown-item img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dropdown-item.logout {
+            color: #db4343;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            margin-left: 12px;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .user-handle {
+            font-weight: 500;
+            color: #ada8ba;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .badges {
+            display: flex;
+            margin-left: 16px;
+            gap: 4px;
+        }
+
+        .badge {
+            height: 26px;
+            padding: 0 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .badge.pro {
+            background-color: #d6c8ff;
+            color: #7450de;
+        }
+
+        .badge.points {
+            background-color: #f4b813;
+            color: #684e06;
+        }
+
+        .points-icon {
+            display: flex;
+            margin-left: 4px;
+        }
+
+        .dropdown-icon {
+            margin-left: auto;
+            width: 11px;
+            height: 7px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            width: 100%;
+            max-width: 1600px;
+            margin-top: 115px;
+            padding: 20px;
+        }
+
+        .subscription-note {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #b8b5c6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subscription-tabs {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin: 0 auto 30px;
+            z-index: 1;
+        }
+
+        .tab {
+            padding: 10px 25px;
+            border-radius: 10px;
+            background: transparent;
+            color: #b8b5c6;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: #f3f0fc;
+            color: #6f4add;
+            font-weight: 600;
+        }
+        
+        .tab:hover:not(.active) {
+            background: rgba(243, 240, 252, 0.2);
+        }
+
+        .pricing-plans-wide {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .pricing-card-wide {
+            background: #FBFBFB;
+            border-radius: 25px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 30%;
+            min-width: 350px;
+            flex-grow: 1;
+            border:1px solid #E9E9E9;
+        }
+
+        .pricing-card-wide:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .pricing-card-wide.popular {
+            background: #F4B813;
+        }
+
+        .section {
+            background: white;
+            border-radius: 50px;
+            padding: 80px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title-white {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            color: #000000;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: #6F4ADD;
+            color: white;
+            padding: 8px 40px;
+            transform: rotate(45deg);
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(111,74,221,0.3);
+        }
+
+        .pricing-card-header {
+            padding: 30px 30px 20px;
+        }
+
+        .pricing-card-header h3 {
+            font-size: 32px;
+            color: #000000;
+            margin-bottom: 5px;
+        }
+
+        .pricing-card-subtitle {
+            color: #000000;
+            font-size: 16px;
+        }
+
+        .price-container {
+            padding: 20px 30px;
+        }
+
+        .price {
+            font-size: 50px;
+            font-weight: 1000;
+            color: #000000;
+            margin: 10px 0;
+        }
+
+        .price span {
+            font-size: 18px;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .pricing-features {
+            padding: 25px 30px;
+        }
+
+        .pricing-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pricing-features li {
+            margin-bottom: 8px;
+            color: #5B546F;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+
+        .pricing-card-footer {
+            padding: 30px 30px;
+            padding-bottom: 60px;
+            display: flex;
+            justify-content:center;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #6F4ADD;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 2px solid #6F4ADD;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: #4F27C5;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #6F4ADD;
+        }
+        
+        .btn-outline:hover {
+            background: #D7C9FF;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .nav-icon-item {
+                width: 70px;
+            }
+            
+            .profile-card {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px;
+            }
+            
+            .header-left, .header-center, .header-right {
+                flex: none;
+                width: 100%;
+                justify-content: center;
+                margin: 5px 0;
+            }
+            
+            .storage-label {
+                display: none;
+            }
+
+            .profile-card {
+                width: 250px;
+            }
+
+            .main-content {
+                margin-top: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pricing-plans-wide {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .pricing-card-wide {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 40px;
+            }
+            
+            .section-title-white {
+                font-size: 28px;
+            }
+            
+            .pricing-features li {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Fixed header -->
+        <div class="header-container">
+            <header class="main-header">
+                <!-- Left section -->
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="logo-icon"></div>
+                        <span class="logo-text">AISEO</span>
+                    </div>
+                    <span class="storage-label">Подписки</span>
+                </div>
+
+                <!-- Center section -->
+                <div class="header-center">
+                    <!-- Navigation icons -->
+                    <div class="nav-icons-container">
+                        <!-- Icons will be inserted by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right section -->
+                <div class="header-right">
+                    <!-- User profile -->
+                    <div class="user-profile">
+                        <div class="profile-card">
+                            <div class="avatar">
+                                <img src="change-image-here.png" alt="User avatar">
+                            </div>
+                            <div class="user-info">
+                                <p class="username">Константин</p>
+                                <p class="user-handle">nikonstantinn</p>
+                            </div>
+                            <div class="badges">
+                                <div class="badge pro">PRO</div>
+                                <div class="badge points">
+                                    <span>100</span>
+                                    <div class="points-icon">
+                                        <img src="icon-dot.svg" alt="Generators"> 
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="dropdown-icon" src="icon-1.svg" alt="Dropdown">
+                        </div>
+                        
+                        <div class="profile-dropdown">
+                            <button class="dropdown-item">
+                                <img src="icon-9.svg" alt="Подписка">
+                                <span>Подписка</span>
+                            </button>
+                            <button class="dropdown-item">
+                                <img src="icon-5.svg" alt="Настройки">
+                                <span>Настройки</span>
+                            </button>
+                            <button class="dropdown-item logout">
+                                <img src="icon-10.svg" alt="Выйти">
+                                <span>Выйти</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <div class="section">
+                <h2 class="section-title-white">Выбери свой план подписки</h2>
+                <p class="subscription-note">*Без подписки у тебя будет всего 5 возможностей сделать изображение</p>
+                
+                <div class="subscription-tabs">
+                    <button class="tab active" data-tab="year">Год</button>
+                    <button class="tab" data-tab="month">Месяц</button>
+                </div>
+                
+                <div class="pricing-plans-wide">
+                    <!-- PRO тариф -->
+                    <div class="pricing-card-wide popular">
+                        <div class="pricing-card-header">
+                            <h3>PRO</h3>
+                            <p class="pricing-card-subtitle">Подписка</p>
+                        </div>
+                        
+                        <div class="price-container">
+                            <div class="price month-price" hidden>4 490 ₽<span>/месяц</span></div>
+                            <div class="price year-price">3 990 ₽<span>/месяц</span></div>
+                        </div>
+                        
+                        <div class="pricing-features">
+                            <ul>
+                                <li>Безграничное количество создаваемых изображений и роликов, полный доступ к сервису.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pricing-card-footer">
+                            <a href="#contact" class="btn">Активна</a>
+                        </div>
+                    </div>
+                    
+                    <!-- MEDIUM тариф -->
+                    <div class="pricing-card-wide">
+                        <div class="pricing-card-header">
+                            <h3>MEDIUM</h3>
+                            <p class="pricing-card-subtitle">Подписка</p>
+                        </div>
+                        
+                        <div class="price-container">
+                            <div class="price month-price" hidden>1 490 ₽<span>/месяц</span></div>
+                            <div class="price year-price">1 340 ₽<span>/месяц</span></div>
+                        </div>
+                        
+                        <div class="pricing-features">
+                            <ul>
+                                <li>Идеально для маленьких проектов. Небольшая часть сервиса будет заблокирована, а скорость работы сервиса снижена</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pricing-card-footer">
+                            <a href="#contact" class="btn btn-outline">Оформить</a>
+                        </div>
+                    </div>
+                    
+                    <!-- LITE тариф -->
+                    <div class="pricing-card-wide">
+                        <div class="pricing-card-header">
+                            <h3>LITE</h3>
+                            <p class="pricing-card-subtitle">Подписка</p>
+                        </div>
+                        
+                        <div class="price-container">
+                            <div class="price month-price" hidden>490 ₽<span>/месяц</span></div>
+                            <div class="price year-price">440 ₽<span>/месяц</span></div>
+                        </div>
+                        
+                        <div class="pricing-features">
+                            <ul>
+                                <li>Самая легкая подписка, чтобы прочувствовать сервис, дает возможность делать 100 изображений или роликов в день</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pricing-card-footer">
+                            <a href="#contact" class="btn btn-outline">Оформить</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation data
+        const navItems = [
+            { 
+                id: 1, 
+                src: "frame-73.svg", 
+                alt: "ImagG", 
+                title: "Генерация изображений",
+                page: "generativeim.html"
+            },
+            { 
+                id: 2, 
+                src: "icon-11.svg", 
+                alt: "ClipG", 
+                title: "Генерация видео",
+                page: "videogeneration.html" 
+            },
+            { 
+                id: 3, 
+                src: "icon-7.svg", 
+                alt: "Gide", 
+                title: "Гайды",
+                page: "gides.html" 
+            },
+            { 
+                id: 4, 
+                src: "icon-6.svg", 
+                alt: "Collect", 
+                title: "Коллекции",
+                page: "collections.html" 
+            },
+            { 
+                id: 5, 
+                src: "icon-4.svg", 
+                alt: "Pictur", 
+                title: "Хранилище",
+                page: "pictures.html" 
+            }
+        ];
+
+        // Current page detection
+        function getCurrentPage() {
+            return window.location.pathname.split('/').pop() || 'price.html';
+        }
+
+        // Render navigation
+        function renderNavItems() {
+            const navContainer = document.querySelector('.nav-icons-container');
+            if (!navContainer) return;
+
+            const currentPage = getCurrentPage();
+            
+            navContainer.innerHTML = navItems.map((item, index) => {
+                const isActive = item.page === currentPage;
+                return `
+                <div class="nav-icon" title="${item.title}">
+                    <a href="${isActive ? '#' : item.page}" 
+                       class="nav-icon-item ${index === 0 ? 'first' : ''} ${index === navItems.length - 1 ? 'last' : ''}
+                       ${isActive ? 'active' : ''}">
+                        <img src="${item.src}" alt="${item.alt}">
+                    </a>
+                    ${index < navItems.length - 1 ? '<div class="nav-icon-divider"></div>' : ''}
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Profile dropdown functionality
+        function setupProfileDropdown() {
+            const profileCard = document.querySelector('.profile-card');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            
+            if (profileCard) {
+                profileCard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    profileCard.classList.toggle('active');
+                });
+            }
+            
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.user-profile')) {
+                    document.querySelector('.profile-card.active')?.classList.remove('active');
+                }
+            });
+            
+            if (dropdownItems) {
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = item.querySelector('span').textContent;
+                        if (action === 'Выйти') {
+                            window.location.href = 'registration.html';
+                        } else {
+                            alert(`Вы выбрали: ${action}`);
+                        }
+                        document.querySelector('.profile-card.active')?.classList.remove('active');
+                    });
+                });
+            }
+        }
+
+        // Update page title and storage label
+        function updatePageInfo() {
+            const currentPage = getCurrentPage();
+            const pageData = navItems.find(item => item.page === currentPage);
+            if (pageData) {
+                document.title = `AISEO ${pageData.title}`;
+                const storageLabel = document.querySelector('.storage-label');
+                if (storageLabel) storageLabel.textContent = pageData.title;
+            }
+        }
+
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('.tab');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to current tab
+                this.classList.add('active');
+                
+                // Get tab type (year/month)
+                const tabType = this.getAttribute('data-tab');
+                
+                // Show/hide corresponding prices
+                document.querySelectorAll('.month-price').forEach(el => {
+                    el.hidden = tabType !== 'month';
+                });
+                document.querySelectorAll('.year-price').forEach(el => {
+                    el.hidden = tabType !== 'year';
+                });
+            });
+        });
+
+        // Initialize
+        function init() {
+            renderNavItems();
+            setupProfileDropdown();
+            updatePageInfo();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

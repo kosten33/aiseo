@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISEO Хранилище</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Общие стили из generativeim.html */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f9;
+            color: #333;
+            padding-left: calc(100vw - 100%);
+        }
+
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Header styles (аналогично generativeim.html) */
+        .header-container {
+            width: 100%;
+            max-width: 1600px;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            background-color: #f8f8f9;
+            padding-top: 20px;
+        }
+
+        .main-header {
+            width: 100%;
+            height: 75px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 1600px;
+            padding: 20px;
+            margin-top:115px
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            height: 48px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 33px;
+            background-image: url('union.svg');
+            background-size: 100% 100%;
+        }
+
+        .logo-text {
+            margin-left: 9px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 40px;
+        }
+
+        .storage-label {
+            margin-left: 21px;
+            font-weight: bold;
+            color: #707092;
+            font-size: 14px;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .nav-icons-container {
+            display: flex;
+            height: 100%;
+            border-radius: 20px;
+            border: 1px solid #e7e7f0;
+            background-color: white;
+            width: auto;
+            padding: 0;
+        }
+
+        .nav-icon {
+            position: relative;
+            height: 100%;
+            min-width: 84px;
+        }
+
+        .nav-icon-item {
+            width: 100%;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .nav-icon:first-child .nav-icon-item {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+        }
+
+        .nav-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .nav-icon-divider {
+            position: absolute;
+            width: 1px;
+            height: 75px;
+            top: 0;
+            right: 0;
+            background-color: #e7e7f0;
+            z-index: 1;
+        }
+
+        .nav-icon-item.active {
+            background-color: #6f4add;
+            color: white;
+            border-radius: 0 20px 20px 0;
+        }
+
+        .nav-icon-item.active img {
+            filter: brightness(0) invert(1);
+        }
+
+        .nav-icon-item:not(.active):hover {
+            background-color: #f3f0fc;
+            transform: scale(1.05);
+        }
+
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            flex: 1;
+        }
+
+        .user-profile {
+            position: relative;
+        }
+
+        .profile-card {
+            width: 340px;
+            height: 75px;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .profile-card:hover {
+            border: 1px solid #E7E7F0;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            margin-left: 12px;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .user-handle {
+            font-weight: 500;
+            color: #ada8ba;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .badges {
+            display: flex;
+            margin-left: 16px;
+            gap: 4px;
+        }
+
+        .badge {
+            height: 26px;
+            padding: 0 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .badge.pro {
+            background-color: #d6c8ff;
+            color: #7450de;
+        }
+
+        .badge.points {
+            background-color: #f4b813;
+            color: #684e06;
+        }
+
+        .points-icon {
+            display: flex;
+            margin-left: 4px;
+        }
+
+        .dropdown-icon {
+            margin-left: auto;
+            width: 11px;
+            height: 7px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 340px;
+            background-color: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: none;
+            z-index: 20;
+        }
+
+        .profile-card.active + .profile-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f8f9;
+        }
+
+        .dropdown-item img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dropdown-item.logout {
+            color: #db4343;
+        }
+
+        /* Стили для поиска и фильтров */
+        .search-container {
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 25px;
+            border: 1px solid #E7E7F0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-input-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            border-radius: 20px;
+            background-color: #ffffff;
+            transition: all 0.3s;
+            resize: none;
+            width: 100%;
+            padding: 20px;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            outline: none;
+        }
+
+        .search-input:hover {
+            outline: none;
+            background-color: #f7f6f8;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background-color: #f7f6f8;
+            border: 1px color #6F4ADD;
+        }
+
+        .search-button {
+            padding: 20px;
+            border-radius: 20px;
+            border: none;
+            background-color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: #f3f0fc;
+        }
+
+        .search-button.filter {
+            background-color: #6F4ADD;
+            color: white;
+        }
+
+        .search-button.filter:hover {
+            background-color: #5d3ac7;
+        }
+
+        .dropdown-icon-small {
+            width: 11px;
+            height: 7px;
+        }
+
+        .filters-container {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            z-index: 15;
+            display: none;
+        }
+
+        .filters-container.active {
+            display: block;
+        }
+
+        .filter-section {
+            margin-bottom: 15px;
+        }
+
+        .filter-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-option {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background-color: #f7f6f8;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .filter-option:hover {
+            background-color: #e7e7f0;
+        }
+
+        .filter-option.active {
+            background-color: #6F4ADD;
+            color: white;
+        }
+
+        .apply-filters {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background-color: #6F4ADD;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .apply-filters:hover {
+            background-color: #5d3ac7;
+        }
+
+        /* Стили для галереи */
+        .gallery-container {
+            width: 100%;
+            max-width: 1600px;
+            margin-top: 180px;
+            padding: 20px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .item-info {
+            padding: 15px;
+        }
+
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Стили для popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup-content {
+            width: 90%;
+            max-width: 1200px;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .popup-image-container {
+            flex: 2;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f8f9;
+        }
+
+        .popup-image-container img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .popup-info {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-item image {
+            width: 20px;
+            height: 20px;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .action-button.like {
+            background-color: #f0f7f0;
+            color: #2e7d32;
+        }
+
+        .action-button.dislike {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #f8f8f9;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .nav-icon-item {
+                width: 70px;
+            }
+            
+            .profile-card {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px;
+            }
+            
+            .header-left, .header-center, .header-right {
+                flex: none;
+                width: 100%;
+                justify-content: center;
+                margin: 5px 0;
+            }
+            
+            .storage-label {
+                display: none;
+            }
+
+            .profile-card {
+                width: 250px;
+            }
+
+            .gallery-container {
+                margin-top: 250px;
+            }
+            
+            .popup-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .search-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Fixed header -->
+        <div class="header-container">
+            <header class="main-header">
+                <!-- Left section -->
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="logo-icon"></div>
+                        <span class="logo-text">AISEO</span>
+                    </div>
+                    <span class="storage-label">Хранилище</span>
+                </div>
+
+                <!-- Center section -->
+                <div class="header-center">
+                    <!-- Navigation icons -->
+                    <div class="nav-icons-container">
+                        <!-- Icons will be inserted by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right section -->
+                <div class="header-right">
+                    <!-- User profile -->
+                    <div class="user-profile">
+                        <div class="profile-card">
+                            <div class="avatar">
+                                <img src="change-image-here.png" alt="User avatar">
+                            </div>
+                            <div class="user-info">
+                                <p class="username">Константин</p>
+                                <p class="user-handle">nikonstantinn</p>
+                            </div>
+                            <div class="badges">
+                                <div class="badge pro">PRO</div>
+                                <div class="badge points">
+                                    <span>100</span>
+                                    <div class="points-icon">
+                                        <img src="icon-dot.svg" alt="Generators"> 
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="dropdown-icon" src="icon-1.svg" alt="Dropdown">
+                        </div>
+                        
+                        <div class="profile-dropdown">
+                            <button class="dropdown-item" id="subscriptionButton" >
+                                <img src="icon-9.svg" alt="Подписка" >
+                                <span>Подписка</span>
+                            </button>
+                            <button class="dropdown-item">
+                                <img src="icon-5.svg" alt="Настройки">
+                                <span>Настройки</span>
+                            </button>
+                            <button class="dropdown-item logout">
+                                <img src="icon-10.svg" alt="Выйти">
+                                <span>Выйти</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>    
+        <div class="main-content">
+            <!-- Search and filters -->
+            <div class="search-container">
+                <div class="search-input-container">
+                    <input type="text" class="search-input" placeholder="Поиск изображений...">
+                </div>
+                
+                <button class="search-button filter" id="filter-button">
+                    Поиск
+                </button>
+            </div>
+        
+
+        <!-- Gallery content -->
+        <div class="gallery-container">
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Gallery items will be inserted by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Image popup -->
+        <div class="popup-overlay" id="image-popup">
+            <div class="popup-content">
+                <div class="popup-image-container">
+                    <img id="popup-image" src="" alt="">
+                </div>
+                
+                <div class="popup-info">
+                    <h2 id="popup-title">Публикация</h2>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <image src="icon-date.svg">
+                            <span class="info-text" id="popup-date">09.03.2025 12:33</span>
+                        </div>
+                        <div class="info-item">
+                            <image src="icon-image.svg">
+                            <span class="info-text">Изображение</span>
+                        </div>
+                        <div class="info-item">
+                            <image src="icon-style.svg">
+                            <span class="info-text" id="popup-style">Животные</span>
+                        </div>
+                        <div class="info-item">
+                            <image src="icon-brush.svg">
+                            <span class="info-text" id="popup-art-style">Реализм</span>
+                        </div>
+                        <div class="info-item">
+                            <image src="icon-size.svg">
+                            <span class="info-text" id="popup-size">1920×1920</span>
+                        </div>
+                    </div>
+                    
+                    <div class="popup-actions">
+                        <button class="action-button like" id="like-button">
+                            <image src="icon-like.svg">
+                            <span id="like-count">0</span>
+                        </button>
+                        <button class="action-button dislike" id="dislike-button">
+                            <image src="icon-dislike.svg">
+                            <span id="dislike-count">0</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="close-popup" id="close-popup">&times;</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    <script>
+
+        // Gallery data
+        const galleryItems = [
+            {
+                id: 1,
+                title: "Горный пейзаж",
+                imageUrl: "image.png",
+                style: "realism",
+                size: "1920x1080",
+                date: "2025-03-10",
+                likes: 15,
+                dislikes: 2,
+                artStyle: "Реализм",
+                category: "Пейзаж"
+            },
+            {
+                id: 2,
+                title: "Кибергород",
+                imageUrl: "image-2.png",
+                style: "cyberpunk",
+                size: "1024x1024",
+                date: "2025-03-08",
+                likes: 42,
+                dislikes: 5,
+                artStyle: "Киберпанк",
+                category: "Город"
+            },
+            {
+                id: 3,
+                title: "Аниме герой",
+                imageUrl: "image-3.png",
+                style: "anime",
+                size: "512x512",
+                date: "2025-03-05",
+                likes: 28,
+                dislikes: 3,
+                artStyle: "Аниме",
+                category: "Персонаж"
+            },
+            {
+                id: 4,
+                title: "Фэнтези дракон",
+                imageUrl: "image-4.png",
+                style: "fantasy",
+                size: "1920x1080",
+                date: "2025-03-01",
+                likes: 36,
+                dislikes: 1,
+                artStyle: "Фэнтези",
+                category: "Существо"
+            },
+            {
+                id: 5,
+                title: "Портрет девушки",
+                imageUrl: "portrait.jpg",
+                style: "realism",
+                size: "1024x1024",
+                date: "2025-02-28",
+                likes: 19,
+                dislikes: 0,
+                artStyle: "Реализм",
+                category: "Портрет"
+            },
+            {
+                id: 6,
+                title: "Космическая станция",
+                imageUrl: "space-station.jpg",
+                style: "cyberpunk",
+                size: "1920x1080",
+                date: "2025-02-25",
+                likes: 31,
+                dislikes: 4,
+                artStyle: "Киберпанк",
+                category: "Космос"
+            },
+            {
+                id: 7,
+                title: "Аниме кошка",
+                imageUrl: "anime-cat.jpg",
+                style: "anime",
+                size: "512x512",
+                date: "2025-02-20",
+                likes: 23,
+                dislikes: 2,
+                artStyle: "Аниме",
+                category: "Животное"
+            },
+            {
+                id: 8,
+                title: "Замок в облаках",
+                imageUrl: "castle-clouds.jpg",
+                style: "fantasy",
+                size: "1024x1024",
+                date: "2025-02-15",
+                likes: 27,
+                dislikes: 1,
+                artStyle: "Фэнтези",
+                category: "Архитектура"
+            }
+        ];
+
+        // Current page detection
+        function getCurrentPage() {
+            return window.location.pathname.split('/').pop() || 'pictures.html';
+        }
+
+        // Profile dropdown functionality
+        function setupProfileDropdown() {
+            const profileCard = document.querySelector('.profile-card');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            
+            if (profileCard) {
+                profileCard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    profileCard.classList.toggle('active');
+                });
+            }
+            
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.user-profile')) {
+                    document.querySelector('.profile-card.active')?.classList.remove('active');
+                }
+            });
+            
+            if (dropdownItems) {
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = item.querySelector('span').textContent;
+                        if (action === 'Выйти') {
+                            window.location.href = 'registration.html';
+                        } else {
+                        }
+                        document.querySelector('.profile-card.active')?.classList.remove('active');
+                    });
+                });
+            }
+        }
+
+        // Render gallery items
+        function renderGalleryItems(items) {
+            const galleryGrid = document.getElementById('gallery-grid');
+            if (!galleryGrid) return;
+
+            galleryGrid.innerHTML = items.map(item => `
+                <div class="gallery-item" data-id="${item.id}">
+                    <img src="${item.imageUrl}" alt="${item.title}">
+                    <div class="item-info">
+                        <h3 class="item-title">${item.title}</h3>
+                        <div class="item-meta">
+                            <span>${item.artStyle}</span>
+                            <span>${item.size}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click event to gallery items
+            document.querySelectorAll('.gallery-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const itemId = parseInt(item.getAttribute('data-id'));
+                    const galleryItem = galleryItems.find(i => i.id === itemId);
+                    if (galleryItem) {
+                        openImagePopup(galleryItem);
+                    }
+                });
+            });
+        }
+
+        // Open image popup
+        function openImagePopup(item) {
+            const popup = document.getElementById('image-popup');
+            const popupImage = document.getElementById('popup-image');
+            const popupTitle = document.getElementById('popup-title');
+            const popupDate = document.getElementById('popup-date');
+            const popupStyle = document.getElementById('popup-style');
+            const popupArtStyle = document.getElementById('popup-art-style');
+            const popupSize = document.getElementById('popup-size');
+            const likeCount = document.getElementById('like-count');
+            const dislikeCount = document.getElementById('dislike-count');
+
+            popupImage.src = item.imageUrl;
+            popupImage.alt = item.title;
+            popupTitle.textContent = item.title;
+            popupDate.textContent = formatDate(item.date);
+            popupStyle.textContent = item.category;
+            popupArtStyle.textContent = item.artStyle;
+            popupSize.textContent = item.size;
+            likeCount.textContent = item.likes;
+            dislikeCount.textContent = item.dislikes;
+
+            // Set like/dislike button handlers
+            document.getElementById('like-button').onclick = () => {
+                item.likes++;
+                likeCount.textContent = item.likes;
+            };
+
+            document.getElementById('dislike-button').onclick = () => {
+                item.dislikes++;
+                dislikeCount.textContent = item.dislikes;
+            };
+
+            popup.classList.add('active');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Navigation data
+        const navItems = [
+            { 
+                id: 1, 
+                src: "frame-73.svg", 
+                alt: "ImagG", 
+                title: "Генерация изображений",
+                page: "generativeim.html"
+            },
+            { 
+                id: 2, 
+                src: "icon-11.svg", 
+                alt: "ClipG", 
+                title: "Генерация видео",
+                page: "videogeneration.html" 
+            },
+            { 
+                id: 3, 
+                src: "icon-7.svg", 
+                alt: "Gide", 
+                title: "Гайды",
+                page: "gides.html" 
+            },
+            { 
+                id: 4, 
+                src: "icon-6.svg", 
+                alt: "Collect", 
+                title: "Коллекции",
+                page: "collections.html" 
+            },
+            { 
+                id: 5, 
+                src: "icon-4.svg", 
+                alt: "Pictur", 
+                title: "Хранилище",
+                page: "pictures.html" 
+            }
+        ];
+
+        // Render navigation
+        function renderNavItems() {
+            const navContainer = document.querySelector('.nav-icons-container');
+            if (!navContainer) return;
+
+            const currentPage = getCurrentPage();
+            
+            navContainer.innerHTML = navItems.map((item, index) => {
+                const isActive = item.page === currentPage;
+                return `
+                <div class="nav-icon" title="${item.title}">
+                    <a href="${isActive ? '#' : item.page}" 
+                       class="nav-icon-item ${index === 0 ? 'first' : ''} ${index === navItems.length - 1 ? 'last' : ''}
+                       ${isActive ? 'active' : ''}">
+                        <img src="${item.src}" alt="${item.alt}">
+                    </a>
+                    ${index < navItems.length - 1 ? '<div class="nav-icon-divider"></div>' : ''}
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Update page title and storage label
+        function updatePageInfo() {
+            const currentPage = getCurrentPage();
+            const pageData = navItems.find(item => item.page === currentPage);
+            if (pageData) {
+                document.title = `AISEO ${pageData.title}`;
+            }
+        }
+
+        // Initialize
+        function init() {
+            renderNavItems();
+            setupProfileDropdown();
+            updatePageInfo();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+<script>
+    document.getElementById('subscriptionButton').addEventListener('click', function() {
+        window.location.href = 'price.html';
+    });
+</script>
